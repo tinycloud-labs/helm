@@ -18,10 +18,10 @@
 
 {{/* Define common metadata labels */}}
 {{- define "app.labels" -}}
-app.kubernetes.io/name: {{ include "app.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/name: "{{ include "app.name" . }}"
+app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- with .Chart.AppVersion }}
-app.kubernetes.io/version: {{ . }}
+app.kubernetes.io/version: "{{ . }}"
 {{- end }}
 {{- end }}
 
