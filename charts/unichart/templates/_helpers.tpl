@@ -18,10 +18,10 @@
 
 {{/* Define common metadata labels */}}
 {{- define "app.labels" -}}
-app.kubernetes.io/name: {{ include "app.name" . | quote }}
-app.kubernetes.io/instance: {{ .Release.Name | quote }}
+app.kubernetes.io/name: {{ include "app.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- with .Chart.AppVersion }}
-app.kubernetes.io/version: {{ . | quote }}
+app.kubernetes.io/version: {{ . }}
 {{- end }}
 {{- end }}
 
@@ -30,8 +30,8 @@ Define common selector labels with dynamic role.
 Usage: include "app.selectorLabels" (dict "role" "app" "context" .)
 */}}
 {{- define "app.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "app.name" .context | quote }}
-app.kubernetes.io/role: {{ .role | quote }}
+app.kubernetes.io/name: {{ include "app.name" .context }}
+app.kubernetes.io/role: {{ .role }}
 {{- end }}
 
 {{/* Define db hostname, using the configured value if provided */}}
