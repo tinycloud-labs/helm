@@ -1,0 +1,35 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: {{ .Values.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+{{- range $key, $value := .Values.labels }}
+    {{ $key }}: {{ $value | quote }}
+{{- end }}
+spec:
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      labels:
+{{- range $key, $value := .Values.podLabels }}
+        {{ $key }}: {{ $value | quote }}
+{{- end }}
+    spec:
+      repository: {{ .Values.repository }}
+      serviceAccountName: {{ .Values.name }}-sa
+      containers:
+      - name: runner
+        image: {{ .Values.image }}
+        volumeMounts:
+        - name: sa-token
+          mountPath: /var/run/secrets/tokens
+          readOnly: true
+      volumes:
+      - name: sa-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              path: gha-token
+              expirationSeconds: 3600
+              audience: "kubernetes.default.svc"
