@@ -1,0 +1,17 @@
+# -- `name` is global. All resources will use this name postfixed with a `-<type>`.
+# -- For example, if name: "foo", the service account will be: `foo-sa`.
+name:
+
+namespace:
+
+# -- How many runner pods do you want?
+replicas: 1
+
+# -- Name of the Github repo the runner will be integrated with.
+repository: ""
+
+# -- Labels for the runner deployment
+labels: {}
+
+# -- Labels for the runner pods
+podLabels: {}
