@@ -136,7 +136,7 @@ database:
 # If you have an existing PersistentVolumeClaim. To be shared by app + db.
 # Otherwise, use `nfs-persistent-volume` to create a new PVC.
 # Each container will mount their subPaths within this PVC.
-existingClaim: ""
+# existingClaim: ""
 
 #
 # Configuration for creating a new PersistentVolumeClaim using NFS backend.
@@ -157,7 +157,7 @@ persistence:
   reclaimPolicy: Retain
 
   # Optional: Specify an existing storage class name for dynamic PV provisioning.
-  storageClassName: "nfs-client"
+  # storageClassName: ""
 
   # NFS server details
   nfs:
