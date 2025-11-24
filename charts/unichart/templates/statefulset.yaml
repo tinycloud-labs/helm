@@ -27,7 +27,7 @@ spec:
             {{- end }}
           {{- end }}
           volumeMounts:
-            {{- $claimName := .Values.existingClaim | default .Values.persistence.name }}
+            {{- $claimName := .Values.existingClaim | default (include "app.persistenceName" .) }}
             {{- if $claimName }}
             {{- range .Values.database.volumeMounts }}
             - name: {{ $claimName }}
@@ -36,7 +36,7 @@ spec:
             {{- end }}
             {{- end }}
       volumes:
-        {{- $claimName := .Values.existingClaim | default .Values.persistence.name }}
+        {{- $claimName := .Values.existingClaim | default (include "app.persistenceName" .) }}
         {{- if $claimName }}
         - name: {{ $claimName }}
           persistentVolumeClaim:

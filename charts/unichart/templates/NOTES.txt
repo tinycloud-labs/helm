@@ -28,7 +28,7 @@ Note: Secrets env-vars are enabled
 Ensure these secrets exist in the cluster before deployment.
 {{- end }}
 
-{{- $claimName := .Values.existingClaim | default .Values.persistence.name }}
+{{- $claimName := .Values.existingClaim | default (include "app.persistenceName" .) }}
 {{- if $claimName }}
 📦 Persistent storage PVC: {{ $claimName }}
 {{- else }}

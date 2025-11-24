@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "app.name" . }}
+  name: {{ include "app.persistenceName" . }}
   namespace: {{ .Values.namespace | default .Release.Namespace }}
   labels: {{ include "app.labels" . | nindent 4 }}
 spec:
@@ -15,6 +15,6 @@ spec:
   storageClassName: {{ .Values.persistence.storageClassName }}
 {{- else }}
   storageClassName: ""
-  volumeName: {{ include "app.name" . }}
+  volumeName: {{ include "app.persistenceName" . }}
 {{- end }}
 {{- end }}

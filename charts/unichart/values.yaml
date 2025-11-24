@@ -138,7 +138,9 @@ persistence:
   enabled: false
 
   # Optional name: defaults to the app/release name if not provided.
-  name: ""
+  # If you want to use a custom name, ensure your app references the PVC name as:
+  # ".Release-unichart". For example, if release name is "foo", set this to "foo-unichart".
+  # name: ""
 
   # Size of the volume claim. E.g. 10Gi, 50Gi, etc. (see note above)
   size: 1Gi

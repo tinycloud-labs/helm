@@ -56,3 +56,12 @@ app.kubernetes.io/role: {{ .role }}
 {{ include "app.name" . }}-db
 {{- end -}}
 {{- end }}
+
+{{/* Define a single name to use with storage mapping */}} }}
+{{- define "app.persistenceName" -}}
+{{- if .Values.persistence.name -}}
+{{ .Values.persistence.name }}
+{{- else -}}
+{{ include "app.name" . }}
+{{- end -}}
+{{- end }}

@@ -149,7 +149,7 @@ persistence:
   enabled: true
 
   # Optional name: defaults to the app/release name if not provided.
-  name: "gaseous"
+  # name: "gaseous"
 
   # Size of the volume claim. E.g. 10Gi, 50Gi, etc. (see note above)
   size: 200Mi
