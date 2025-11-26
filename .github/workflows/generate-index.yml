@@ -47,39 +47,35 @@ jobs:
           git fetch origin main
           git checkout origin/main -- .github/chart-index-template.md
 
-      - name: Build markdown table
-        id: table
+      - name: Build bullet points
+        id: bullets
         run: |
-          echo "table<<EOF" >> $GITHUB_OUTPUT
-          echo "| Chart | Latest Version | Description |"
-          echo "|-------|----------------|-------------|"
+          echo "bullets<<EOF" >> $GITHUB_OUTPUT
 
           echo '${{ steps.parse.outputs.charts }}' \
             | jq -r '.[] |
-                "| [" + .name + "](https://github.com/tinycloud-labs/helm/tree/main/charts/" + .name + ") | " +
-                .version + " | " +
-                (.description // "—") + " |"' \
+                "- [" + .name + "](https://github.com/tinycloud-labs/helm/tree/main/charts/" + .name + "): " +
+                .version + " – " +
+                (.description // "—")' \
             >> $GITHUB_OUTPUT
 
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Generate index.md
         run: |
-          # Write table output to a temp file to preserve newlines exactly
-          cat << 'EOF' > table.txt
-          ${{ steps.table.outputs.table }}
+          # Write bullets to temp file to preserve newlines
+          cat << 'EOF' > bullets.txt
+          ${{ steps.bullets.outputs.bullets }}
           EOF
 
-          # Insert table.txt into the template at <!--CHART_TABLE-->
+          # Insert bullets into template at <!--CHART_TABLE-->
           awk '
             /<!--CHART_TABLE-->/ {
-              while ((getline line < "table.txt") > 0) print line
+              while ((getline line < "bullets.txt") > 0) print line
               next
             }
             { print }
           ' .github/chart-index-template.md > index.md
-
-
 
       - name: Commit and push
         run: |
