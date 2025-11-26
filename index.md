@@ -1,8 +1,6 @@
 # TinyCloud Labs Helm Charts
 
-Welcome to the tinycloud-labs Helm chart repository!
-
-Add this repo with:
+Add this Helm repo:
 
 ```bash
 helm repo add tinycloud-labs https://tinycloud-labs.github.io/helm
