@@ -1,0 +1,77 @@
+name: Generate Helm Repo Index Page
+
+on:
+  workflow_dispatch
+  # push:
+  #   branches:
+  #     - gh-pages     # run when chart-releaser updates index.yaml
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate-index:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+
+      - name: Install yq
+        run: |
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
+            -O /usr/local/bin/yq
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Read entries from index.yaml
+        id: parse
+        run: |
+          echo "charts<<EOF" >> $GITHUB_OUTPUT
+          yq '.entries | to_entries |
+            map({
+              name: .key,
+              version: .value[0].version,
+              description: .value[0].description
+            })' index.yaml >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Checkout main to get template
+        run: |
+          git fetch origin main
+          git checkout origin/main -- .github/chart-index-template.md
+
+      - name: Build markdown table
+        id: table
+        run: |
+          echo "table<<EOF" >> $GITHUB_OUTPUT
+          echo "| Chart | Latest Version | Description |"
+          echo "|-------|----------------|-------------|"
+
+          echo '${{ steps.parse.outputs.charts }}' \
+            | yq -o=json e '.' - \
+            | jq -r '.[] |
+                "| [" + .name + "](https://github.com/tinycloud-labs/helm/tree/main/charts/" + .name + ") | " +
+                .version + " | " +
+                (.description // "—") + " |"' \
+            >> $GITHUB_OUTPUT
+
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Generate index.md
+        run: |
+          sed "s|<!--CHART_TABLE-->|${{ steps.table.outputs.table }}|" \
+            .github/chart-index-template.md > index.md
+
+      - name: Commit and push
+        run: |
+          git add index.md
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git config user.name "$GITHUB_ACTOR"
+            git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+            git commit -m "Auto-update index.md"
+            git push origin gh-pages
+          fi
