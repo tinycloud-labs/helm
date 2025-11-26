@@ -25,16 +25,21 @@ jobs:
             -O /usr/local/bin/yq
           sudo chmod +x /usr/local/bin/yq
 
-      - name: Read entries from index.yaml
+      - name: Parse index.yaml using jq only
         id: parse
         run: |
           echo "charts<<EOF" >> $GITHUB_OUTPUT
-          yq '.entries | to_entries |
-            map({
-              name: .key,
-              version: .value[0].version,
-              description: .value[0].description
-            })' index.yaml >> $GITHUB_OUTPUT
+
+          # Convert index.yaml → JSON → extract entries cleanly
+          yq -o=json e '.entries' index.yaml \
+            | jq -c 'to_entries
+              | map({
+                  name: .key,
+                  version: .value[0].version,
+                  description: .value[0].description
+                })' \
+            >> $GITHUB_OUTPUT
+
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Checkout main to get template
@@ -50,7 +55,6 @@ jobs:
           echo "|-------|----------------|-------------|"
 
           echo '${{ steps.parse.outputs.charts }}' \
-            | yq -o=json e '.' - \
             | jq -r '.[] |
                 "| [" + .name + "](https://github.com/tinycloud-labs/helm/tree/main/charts/" + .name + ") | " +
                 .version + " | " +
