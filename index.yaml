@@ -1,16 +1,5 @@
 apiVersion: v1
 entries:
-  gha-runner-deployment:
-  - apiVersion: v2
-    appVersion: 0.23.7
-    created: "2025-11-15T23:02:39.845951234Z"
-    description: A Helm chart for Installing Github Actions runner deployment
-    digest: 8f4d3dd4d80d22c9281a3b07eb675ecb3aa94435df703e61b6f7434928b48f30
-    name: gha-runner-deployment
-    type: application
-    urls:
-    - https://github.com/tinycloud-labs/helm/releases/download/gha-runner-deployment-0.0.1/gha-runner-deployment-0.0.1.tgz
-    version: 0.0.1
   nfspersistence:
   - annotations:
       category: storage
