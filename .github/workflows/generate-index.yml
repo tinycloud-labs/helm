@@ -1,87 +1,115 @@
-name: Generate Helm Repo Index Page
+name: Publish Helm Charts
 
 on:
-  workflow_dispatch
-  # push:
-  #   branches:
-  #     - gh-pages     # run when chart-releaser updates index.yaml
-
-permissions:
-  contents: write
+  push:
+    branches:
+      - main
+    paths:
+      - 'charts/**'
+      - '.github/chart-index-template.md'
+      - '.github/workflows/publish.yaml'
 
 jobs:
-  regenerate-index:
+  publish:
     runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+
+      - name: Install yq
+        run: |
+          sudo add-apt-repository ppa:rmescandon/yq -y
+          sudo apt update
+          sudo apt install yq -y
+
+      - name: Package charts
+        run: |
+          mkdir -p .deploy
+          for chart in charts/*; do
+            if [[ -f "$chart/Chart.yaml" ]]; then
+              helm package "$chart" -d .deploy
+            fi
+          done
+
       - name: Checkout gh-pages
         uses: actions/checkout@v4
         with:
           ref: gh-pages
-          fetch-depth: 0
+          path: gh-pages
 
-      - name: Install yq
+      - name: Update index.yaml
         run: |
-          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
-            -O /usr/local/bin/yq
-          sudo chmod +x /usr/local/bin/yq
+          cd gh-pages
 
-      - name: Parse index.yaml using jq only
-        id: parse
+          mkdir -p .
+          if [[ ! -f index.yaml ]]; then
+            echo "Creating new index.yaml"
+            helm repo index . --url https://tinycloud-labs.github.io/helm
+          else
+            echo "Merging charts into existing index.yaml"
+            helm repo index ../.deploy --merge index.yaml --url https://tinycloud-labs.github.io/helm
+          fi
+
+          # Move new package files into gh-pages
+          cp ../.deploy/*.tgz .
+
+      - name: Parse index.yaml for chart metadata
+        id: charts
         run: |
+          cd gh-pages
+          charts=$(yq -o json '.entries | to_entries |
+            map({
+              name: .key,
+              version: .value[0].version,
+              description: .value[0].description
+            })' index.yaml)
+
           echo "charts<<EOF" >> $GITHUB_OUTPUT
-
-          # Convert index.yaml → JSON → extract entries cleanly
-          yq -o=json e '.entries' index.yaml \
-            | jq -c 'to_entries
-              | map({
-                  name: .key,
-                  version: .value[0].version,
-                  description: .value[0].description
-                })' \
-            >> $GITHUB_OUTPUT
-
+          echo "$charts" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Checkout main to get template
-        run: |
-          git fetch origin main
-          git checkout origin/main -- .github/chart-index-template.md
-
-      - name: Build markdown table
+      - name: Generate markdown table
         id: table
         run: |
           echo "table<<EOF" >> $GITHUB_OUTPUT
-          echo "| Chart | Latest Version | Description |"
-          echo "|-------|----------------|-------------|"
 
-          echo '${{ steps.parse.outputs.charts }}' \
-            | jq -r '.[] |
-                "| [" + .name + "](https://github.com/tinycloud-labs/helm/tree/main/charts/" + .name + ") | " +
-                .version + " | " +
-                (.description // "—") + " |"' \
-            >> $GITHUB_OUTPUT
+          echo '| Chart | Version | Description |'
+          echo '|-------|---------|-------------|'
+
+          echo '${{ steps.charts.outputs.charts }}' | jq -c '.[]' |
+          while read -r chart; do
+            name=$(echo "$chart" | jq -r '.name')
+            version=$(echo "$chart" | jq -r '.version')
+            description=$(echo "$chart" | jq -r '.description')
+
+            echo "| [$name](https://github.com/tinycloud-labs/helm/tree/main/charts/$name) | $version | $description |"
+          done
 
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Generate index.md
+      - name: Build index.md from template
         run: |
-          awk -v table="${{ steps.table.outputs.table }}" '
-            /<!--CHART_TABLE-->/ {
-              print table
-              next
-            }
+          cd gh-pages
+
+          awk '
+            /<!--CHART_TABLE-->/ { print; exit }
             { print }
-          ' .github/chart-index-template.md > index.md
+          ' ../.github/chart-index-template.md > index.md
 
+          printf "%s\n" "${{ steps.table.outputs.table }}" >> index.md
 
-      - name: Commit and push
+          awk 'found { print } /<!--CHART_TABLE-->/ { found=1 }' \
+            ../.github/chart-index-template.md >> index.md
+
+      - name: Commit & Push
         run: |
-          git add index.md
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git config user.name "$GITHUB_ACTOR"
-            git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-            git commit -m "Auto-update index.md"
-            git push origin gh-pages
-          fi
+          cd gh-pages
+          git config user.email "github-actions@github.com"
+          git config user.name "github-actions"
+          git add .
+          git commit -m "Update charts and index" || echo "No changes"
+          git push
