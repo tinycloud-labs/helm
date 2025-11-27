@@ -36,6 +36,7 @@ spec:
                 name: {{ . | quote }}
             {{- end }}
           {{- end }}
+          {{- if and .Values.app.volumeMounts (gt (len .Values.app.volumeMounts) 0) }}
           volumeMounts:
             {{- $claimName := .Values.existingClaim | default (include "app.persistenceName" .) }}
             {{- if $claimName }}
@@ -45,6 +46,7 @@ spec:
               subPath: {{ .subPath }}
             {{- end }}
             {{- end }}
+          {{- end }}
           {{- if .Values.app.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
