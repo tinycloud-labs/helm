@@ -1,10 +1,10 @@
 name: Generate Helm Repo Index Page
 
 on:
-  workflow_dispatch
-  # push:
-  #   branches:
-  #     - gh-pages     # run when chart-releaser updates index.yaml
+  # workflow_dispatch
+  push:
+    branches:
+      - gh-pages     # run when chart-releaser updates index.yaml
 
 permissions:
   contents: write
