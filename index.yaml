@@ -44,6 +44,17 @@ entries:
   unichart:
   - apiVersion: v2
     appVersion: "1.0"
+    created: "2025-12-08T00:35:32.263698175Z"
+    description: A generic Helm chart, supports stateful and statless applications.
+    digest: 62c6e969675f3c9e59de77273d0bf929e9fa81752822123ec0e52bd813e34b11
+    maintainers:
+    - {}
+    name: unichart
+    urls:
+    - https://github.com/tinycloud-labs/helm/releases/download/unichart-0.0.8/unichart-0.0.8.tgz
+    version: 0.0.8
+  - apiVersion: v2
+    appVersion: "1.0"
     created: "2025-12-07T00:44:19.424919314Z"
     description: A generic Helm chart, supports stateful and statless applications.
     digest: 693f9c9950cdebea5308383df6b687b4462cdbbb907c3625a38687e7feec978d
@@ -119,4 +130,4 @@ entries:
     urls:
     - https://github.com/homecloud-labs/helm/releases/download/unichart-0.0.1/unichart-0.0.1.tgz
     version: 0.0.1
-generated: "2025-12-07T00:44:19.424963236Z"
+generated: "2025-12-08T00:35:32.26373892Z"
