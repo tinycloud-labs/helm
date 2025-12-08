@@ -9,7 +9,8 @@ app:
   name: "gaseous"
   image:
     repository: "gaseousgames/gaseousserver"
-    tag: "latest"
+    tag: latest
+    digest: "sha256:xxxxxxxxx"
     pullPolicy: IfNotPresent
   replicaCount: 1
   containerPort: 6595
@@ -59,7 +60,8 @@ database:
 
   image:
     repository: "shakir85/bitnami-mariadb"
-    tag: "30072025"
+    tag: latest
+    # digest: "sha256:xxxxxxxxx"
     pullPolicy: IfNotPresent
 
   volumeMounts:

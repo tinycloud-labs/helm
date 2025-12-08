@@ -19,7 +19,9 @@ app:
   name: ""
   image:
     repository: ""
+    # -- Select either `digets` or `tag`
     tag: ""
+    # -- digest format: "sha256:9984afd6512c0415d62a0658cc3ba422b8aa337643616286338e846c4f12c877"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -28,7 +30,7 @@ app:
   containerPort: 80
 
   service:
-    #  -- Default is ClusterIP
+    #  -- Optional: By default it is ClusterIP
     # type: ClusterIP
 
     #  -- The port exposed by the K8s Service.
@@ -95,7 +97,10 @@ database:
   image:
     #  -- Just note that some DB images are difficult to work with NFS backend.
     repository: ""
+    # -- Select either `digets` or `tag`
     tag: ""
+    # -- digest format: "sha256:9984afd6512c0415d62a0658cc3ba422b8aa337643616286338e846c4f12c877"
+    # digest:
     pullPolicy: IfNotPresent
 
   volumeMounts:

@@ -18,7 +18,14 @@ spec:
       ## -- Stateful pods spec --
       containers:
         - name: {{ include "app.database" . }}
-          image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
+          # Decide image name (tag vs digest)
+          {{- $image := "" }}
+          {{- if .Values.app.image.digest }}
+            {{- $image = printf "%s@%s" .Values.app.image.repository .Values.app.image.digest }}
+          {{- else }}
+            {{- $image = printf "%s:%s" .Values.app.image.repository .Values.app.image.tag }}
+          {{- end }}
+          image: "{{ $image }}"
           imagePullPolicy: {{ .Values.database.image.pullPolicy }}
           {{- if .Values.database.env }}
           env:
