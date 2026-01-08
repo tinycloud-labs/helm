@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/schema#",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
         "app": {
@@ -9,7 +9,7 @@
                     "type": "object"
                 },
                 "containerPort": {
-                    "type": "unsupported"
+                   "type": "integer"
                 },
                 "dbHostname": {
                     "type": "null"
@@ -21,7 +21,7 @@
                     "type": "object",
                     "properties": {
                         "enabled": {
-                            "type": "unsupported"
+                            "type": "boolean"
                         },
                         "secretRefNames": {
                             "type": "array"
@@ -32,13 +32,13 @@
                     "type": "object",
                     "properties": {
                         "pullPolicy": {
-                            "type": "unsupported"
+                            "type": "string"
                         },
                         "repository": {
-                            "type": "unsupported"
+                            "type": "string"
                         },
                         "tag": {
-                            "type": "unsupported"
+                            "type": "string"
                         }
                     }
                 },
@@ -49,44 +49,44 @@
                             "type": "array"
                         },
                         "enabled": {
-                            "type": "unsupported"
+                            "type": "boolean"
                         },
                         "failureThreshold": {
-                            "type": "unsupported"
+                            "type": "integer"
                         },
                         "initialDelaySeconds": {
-                            "type": "unsupported"
+                            "type": "integer"
                         },
                         "periodSeconds": {
-                            "type": "unsupported"
+                            "type": "integer"
                         },
                         "timeoutSeconds": {
-                            "type": "unsupported"
+                            "type": "integer"
                         }
                     }
                 },
                 "name": {
-                    "type": "unsupported"
+                    "type": "string"
                 },
                 "readinessProbe": {
                     "type": "object",
                     "properties": {
                         "enabled": {
-                            "type": "unsupported"
+                            "type": "boolean"
                         }
                     }
                 },
                 "replicaCount": {
-                    "type": "unsupported"
+                    "type": "integer"
                 },
                 "service": {
                     "type": "object",
                     "properties": {
                         "port": {
-                            "type": "unsupported"
+                            "type": "integer"
                         },
                         "targetPort": {
-                            "type": "unsupported"
+                            "type": "integer"
                         }
                     }
                 },
@@ -96,10 +96,10 @@
                         "type": "object",
                         "properties": {
                             "mountPath": {
-                                "type": "unsupported"
+                                "type": "string"
                             },
                             "subPath": {
-                                "type": "unsupported"
+                                "type": "string"
                             }
                         }
                     }
@@ -113,33 +113,33 @@
                     "type": "object"
                 },
                 "enabled": {
-                    "type": "unsupported"
+                    "type": "boolean"
                 },
                 "env": {
                     "type": "array"
                 },
                 "host": {
-                    "type": "unsupported"
+                    "type": "string"
                 },
                 "image": {
                     "type": "object",
                     "properties": {
                         "pullPolicy": {
-                            "type": "unsupported"
+                            "type": "string"
                         },
                         "repository": {
-                            "type": "unsupported"
+                            "type": "string"
                         },
                         "tag": {
-                            "type": "unsupported"
+                            "type": "string"
                         }
                     }
                 },
                 "port": {
-                    "type": "unsupported"
+                    "type": "integer"
                 },
                 "replicas": {
-                    "type": "unsupported"
+                    "type": "integer"
                 },
                 "volumeMounts": {
                     "type": "array",
@@ -147,10 +147,10 @@
                         "type": "object",
                         "properties": {
                             "mountPath": {
-                                "type": "unsupported"
+                                "type": "string"
                             },
                             "subPath": {
-                                "type": "unsupported"
+                                "type": "string"
                             }
                         }
                     }
@@ -167,16 +167,16 @@
                     "type": "object"
                 },
                 "enabled": {
-                    "type": "unsupported"
+                    "type": "boolean"
                 },
                 "host": {
-                    "type": "unsupported"
+                    "type": "string"
                 },
                 "ingressClassName": {
-                    "type": "unsupported"
+                    "type": "string"
                 },
                 "port": {
-                    "type": "unsupported"
+                    "type": "integer"
                 }
             }
         },
@@ -190,22 +190,22 @@
             "type": "object",
             "properties": {
                 "accessMode": {
-                    "type": "unsupported"
+                    "type": "string"
                 },
                 "enabled": {
-                    "type": "unsupported"
+                    "type": "boolean"
                 },
                 "existingClaim": {
-                    "type": "unsupported"
+                    "type": "string"
                 },
                 "reclaimPolicy": {
-                    "type": "unsupported"
+                    "type": "string"
                 },
                 "size": {
-                    "type": "unsupported"
+                    "type": "string"
                 },
                 "storageClassName": {
-                    "type": "unsupported"
+                    "type": "string"
                 }
             }
         }
