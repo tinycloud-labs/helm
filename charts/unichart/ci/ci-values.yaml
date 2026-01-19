@@ -50,6 +50,14 @@ database:
     - name: MARIADB_USER
       value: "user"
 
+  securityContext:
+    enabled: true
+    runAsUser: 999
+    runAsGroup: 999
+    runAsNonRoot: true
+    fsGroup: 999
+    fsGroupChangePolicy: OnRootMismatch
+
   replicas: 1
 
 persistence:

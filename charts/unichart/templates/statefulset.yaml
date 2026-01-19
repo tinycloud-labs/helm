@@ -40,7 +40,19 @@ spec:
               mountPath: {{ .mountPath }}
               subPath: {{ .subPath }}
             {{- end }}
-
+          # use this if DB container needs to run chown/chmod
+          {{- if .Values.database.securityContext.enabled }}
+          securityContext:
+            runAsUser: {{ .Values.database.securityContext.runAsUser }}
+            runAsGroup: {{ .Values.database.securityContext.runAsGroup }}
+            runAsNonRoot: {{ .Values.database.securityContext.runAsNonRoot }}
+          {{- end }}
+      # -- For DB containers file ownership (chmod/chown) handeling --
+      {{- if .Values.database.securityContext.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.database.securityContext.fsGroup }}
+        fsGroupChangePolicy: {{ .Values.database.securityContext.fsGroupChangePolicy }}
+      {{- end }}
       # -- PVC spec --
       {{- if .Values.persistence.existingClaim }}
       volumes:

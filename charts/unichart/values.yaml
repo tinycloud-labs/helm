@@ -116,6 +116,15 @@ database:
   #    value: someuser
   env: []
 
+  # -- securityContext: helpful if DB containers, like mariadb, expects to execute chmod/chown on startup
+  securityContext:
+    enabled: false
+    runAsUser: ~
+    runAsGroup: ~
+    runAsNonRoot: false
+    fsGroup: ~
+    fsGroupChangePolicy: ~
+
   #  -- DB pod replicas
   replicas: 1
 
