@@ -13,7 +13,7 @@
 paperlessngx:
   image:
     repository: ghcr.io/paperless-ngx/paperless-ngx
-    tag: 2.20.4
+    tag: 2.20.5
     pullPolicy: IfNotPresent
 
   # Paperless-Ngx env-vars. For available configuration options see: https://docs.paperless-ngx.com/configuration/
