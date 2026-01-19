@@ -1,7 +1,7 @@
 apiVersion: v2
 name: unichart
 version: 0.0.10
-description: A generic Helm chart, supports stateful and statless applications.
+description: A generic Helm chart, supports stateful and statless applications (single deployment each).
 
 maintainers:
   - name: TinyCloud Labs
