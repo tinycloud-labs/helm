@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels: {{ include "app.selectorLabels" (dict "role" "database" "context" .) | nindent 6 }}-statefulset
   serviceName: {{ include "app.dbHeadlessServiceName" . }}
-  replicas: {{ .Values.app.replicaCount | default 1 }}
+  replicas: {{ .Values.database.replicaCount | default 1 }}
   template:
     metadata:
       labels: {{ include "app.selectorLabels" (dict "role" "database" "context" .) | nindent 8 }}-statefulset
@@ -20,10 +20,10 @@ spec:
         - name: {{ include "app.database" . }}
           # Decide image name (tag vs digest)
           {{- $image := "" }}
-          {{- if .Values.app.image.digest }}
-            {{- $image = printf "%s@%s" .Values.app.image.repository .Values.app.image.digest }}
+          {{- if .Values.database.image.digest }}
+            {{- $image = printf "%s@%s" .Values.database.image.repository .Values.database.image.digest }}
           {{- else }}
-            {{- $image = printf "%s:%s" .Values.app.image.repository .Values.app.image.tag }}
+            {{- $image = printf "%s:%s" .Values.database.image.repository .Values.database.image.tag }}
           {{- end }}
           image: "{{ $image }}"
           imagePullPolicy: {{ .Values.database.image.pullPolicy }}
