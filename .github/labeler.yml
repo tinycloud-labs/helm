@@ -1,0 +1,13 @@
+# This file is used to automatically label issues and pull requests based on the files changed.
+# It is used by the GitHub Labeler Action: https://github.com/actions/labeler
+unichart:
+  - changed-files:
+      - any-glob-to-any-file: "charts/unichart/**/*"
+
+nfspersistence:
+  - changed-files:
+      - any-glob-to-any-file: "charts/nfspersistence/**/*"
+
+paperless-ngx:
+  - changed-files:
+      - any-glob-to-any-file: "charts/paperless-ngx/**/*"
