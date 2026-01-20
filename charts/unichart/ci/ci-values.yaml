@@ -12,11 +12,19 @@ app:
 
   replicaCount: 2
 
-  containerPort: 80
+  ports:
+    - containerPort: 6595
+      protocol: TCP
+    - containerPort: 6999
+      protocol: UDP
 
   service:
-    port: 80
-    targetPort: 80
+    ports:
+      - port: 80
+        targetPort: 6595
+      - port: 8080
+        targetPort: 6999
+        protocol: UDP
 
   volumeMounts:
     - mountPath: "/app/data"
