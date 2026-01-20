@@ -7,6 +7,8 @@ spec:
   type: {{ .Values.app.service.type | default "ClusterIP" }}
   selector: {{ include "app.selectorLabels" (dict "role" "app" "context" .) | nindent 4 }}-deployment
   ports:
-    - port: {{ .Values.app.service.port }}
-      targetPort: {{ .Values.app.service.targetPort }}
-      protocol: TCP
+  {{- range .Values.app.service.ports }}
+    - port: {{ .port }}
+      targetPort: {{ .targetPort }}
+      protocol: {{ default "TCP" .protocol }}
+  {{- end }}

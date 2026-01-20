@@ -14,11 +14,17 @@ app:
     pullPolicy: IfNotPresent
   replicaCount: 1
   ports:
-    - name: default
-      containerPort: 6595
+    - containerPort: 6595
+      protocol: TCP
+    - containerPort: 6999
+      protocol: UDP
   service:
-    port: 80
-    targetPort: 6595
+    ports:
+      - port: 80
+        targetPort: 6595
+      - port: 8080
+        targetPort: 6999
+        protocol: UDP
 
   volumeMounts:
     - mountPath: /root/.gaseous-server
