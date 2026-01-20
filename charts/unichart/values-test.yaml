@@ -13,8 +13,9 @@ app:
     digest: "sha256:xxxxxxxxx"
     pullPolicy: IfNotPresent
   replicaCount: 1
-  containerPort: 6595
-
+  ports:
+    - name: default
+      containerPort: 6595
   service:
     port: 80
     targetPort: 6595

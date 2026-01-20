@@ -26,8 +26,10 @@ app:
 
   replicaCount: 1
 
-  #  -- The port the application listens on inside the container.
-  containerPort: 80
+  #  -- A list of ports the application listens to in the container.
+  ports:
+    - name: default
+      containerPort: 80
 
   service:
     #  -- Optional: By default it is ClusterIP

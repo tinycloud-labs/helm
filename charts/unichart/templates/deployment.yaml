@@ -24,8 +24,13 @@ spec:
           {{- end }}
           image: "{{ $image }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+
+          # -- Container Ports --
+          {{- range .Values.app.ports }}
           ports:
-            - containerPort: {{ .Values.app.containerPort }}
+            - containerPort: {{ .containerPort | quote }}
+              name: {{ .name | quote }}
+          {{- end }}
 
           # -- Env- Vars --
           env:
