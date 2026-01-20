@@ -26,10 +26,10 @@ spec:
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
 
           # -- Container Ports --
-          {{- range .Values.app.ports }}
           ports:
-            - containerPort: {{ .containerPort | quote }}
-              name: {{ .name | quote }}
+          {{- range .Values.app.ports }}
+            - containerPort: {{ .containerPort }}
+              protocol: {{ default "TCP" .protocol }}
           {{- end }}
 
           # -- Env- Vars --

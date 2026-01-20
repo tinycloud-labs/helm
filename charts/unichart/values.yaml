@@ -35,10 +35,12 @@ app:
     #  -- Optional: By default it is ClusterIP
     # type: ClusterIP
 
-    #  -- The port exposed by the K8s Service.
-    port: 80
-    #  -- The targetPort that maps to containerPort.
-    targetPort: 80
+    #  -- List of ports exposed by the K8s Service.
+    # targetPort is optional, k8s automatically uses the same value as port
+    ports:
+      - port: 80
+        targetPort: ~
+        protocol: TCP
 
   volumeMounts:
     #  --  Optional: Mount path for the Deployment.
