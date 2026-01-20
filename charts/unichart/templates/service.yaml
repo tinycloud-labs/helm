@@ -8,7 +8,8 @@ spec:
   selector: {{ include "app.selectorLabels" (dict "role" "app" "context" .) | nindent 4 }}-deployment
   ports:
   {{- range .Values.app.service.ports }}
-    - port: {{ .port }}
+    - name: port-{{ .port }}
+      port: {{ .port }}
       targetPort: {{ .targetPort }}
       protocol: {{ default "TCP" .protocol }}
   {{- end }}
