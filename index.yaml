@@ -15,6 +15,14 @@ entries:
     version: 0.3.1
   paperless-ngx:
   - apiVersion: v2
+    created: "2026-01-21T22:30:13.221168794Z"
+    description: A Helm chart for Paperless-ngx with Redis
+    digest: b900fb795012b2a75c16e15f40ab59e2b4efaf4885862a1134b9a530223f3982
+    name: paperless-ngx
+    urls:
+    - https://github.com/tinycloud-labs/helm/releases/download/paperless-ngx-0.1.2/paperless-ngx-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
     created: "2025-11-27T00:41:11.869197883Z"
     description: A Helm chart for Paperless-ngx with Redis
     digest: b3d8fb0250d7c08899cb768e109603486334000bbe4832cd27db1b29bc3c2a2e
@@ -202,4 +210,4 @@ entries:
     urls:
     - https://github.com/homecloud-labs/helm/releases/download/unichart-0.0.1/unichart-0.0.1.tgz
     version: 0.0.1
-generated: "2026-01-20T04:15:40.605445095Z"
+generated: "2026-01-21T22:30:13.221222564Z"
