@@ -65,6 +65,10 @@ spec:
             {{- end }}
           {{- end }}
 
+          # -- Pod resources, parses the whole `resources` map: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#requests-and-limits
+          resources:
+            {{- toYaml .Values.app.resources | nindent 12 }}
+
           # -- Readiness and liveness --
           {{- if .Values.app.readinessProbe.enabled }}
           readinessProbe:

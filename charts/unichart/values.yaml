@@ -68,6 +68,15 @@ app:
     enabled: false
     secretRefNames: []
 
+  # -- requests and limits. Example provided. Supports passing either or both the `requests`/`limits`.
+  # resources:
+  #  requests:
+  #    memory: 2Gi
+  #    cpu: 500m
+  #  limits:
+  #    memory: 2Gi
+  #    cpu: 1
+
   #  -- Affinity rules for deployment pods.
   affinity: {}
 
