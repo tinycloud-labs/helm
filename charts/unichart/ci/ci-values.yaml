@@ -26,6 +26,14 @@ app:
         targetPort: 6999
         protocol: UDP
 
+  resources:
+    requests:
+      memory: 2Gi
+      cpu: 500m
+    limits:
+      memory: 2Gi
+      cpu: 1
+
   volumeMounts:
     - mountPath: "/app/data"
       subPath: "app"
