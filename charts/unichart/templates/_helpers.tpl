@@ -57,11 +57,16 @@ app.kubernetes.io/role: {{ .role }}
 {{- end -}}
 {{- end }}
 
-{{/* Define a single name to use with storage mapping */}} }}
-{{- define "app.persistenceName" -}}
-{{- if .Values.persistence.name -}}
-{{ .Values.persistence.name }}
+{{/*
+Define the name used for the app's own PV/PVC (Deployment side only).
+The StatefulSet no longer needs a name here: its DB volume is created
+per-replica via volumeClaimTemplates and named automatically by Kubernetes
+(db-storage-<statefulset-name>-<ordinal>).
+*/}}
+{{- define "app.appPersistenceName" -}}
+{{- if .Values.persistence.app.name -}}
+{{ .Values.persistence.app.name }}
 {{- else -}}
-{{ include "app.name" . }}
+{{ printf "%s-app-data" (include "app.name" .) }}
 {{- end -}}
 {{- end }}

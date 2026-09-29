@@ -77,14 +77,27 @@ database:
   replicas: 1
 
 persistence:
-  enabled: true
-  name: "ci-pvc"
-  size: "5Gi"
-  accessMode: "ReadWriteMany"
-  reclaimPolicy: "Retain"
-  nfs:
-    server: "nfs-server.example.com"
-    path: "/mnt/nfs/ci"
+  # -- App (Deployment): static NFS PV, unchanged from the original single-block setup --
+  app:
+    enabled: true
+    name: "ci-pvc"
+    size: "5Gi"
+    accessMode: "ReadWriteMany"
+    reclaimPolicy: "Retain"
+    storageClassName: ""   # empty = static NFS PV, no dynamic provisioner
+    nfs:
+      server: "nfs-server.example.com"
+      path: "/mnt/nfs/ci"
+
+  # -- Database (StatefulSet): dynamic provisioning via volumeClaimTemplates for CI --
+  database:
+    size: "5Gi"
+    accessMode: "ReadWriteOnce"
+    storageClassName: "standard"   # swap for whatever class the CI runner's cluster provides
+    existingVolume:
+      handle: ""                  # "" = dynamic provisioning; CI never needs the rebind path
+      fsType: xfs
+      volumeAttributes: {}
 
 ingress:
   enabled: true

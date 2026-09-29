@@ -1,36 +1,37 @@
-🎉 {{ .Release.Name }}: {{- $fullName := include "app.fullname" . }} has been successfully deployed!
+OK
+{{/*🎉 {{ .Release.Name }}: {{- $fullName := include "app.fullname" . }} has been successfully deployed!*/}}
 
-🚀 App Info:
-  Release Name: {{ .Release.Name }}
-  Chart Name: {{ .Chart.Name }}
-  Replicas: {{ .Values.app.replicaCount }}
-  App Container Port: {{ .Values.app.containerPort }}
-  Service Port: {{ .Values.app.service.port }}
+{{/*🚀 App Info:*/}}
+{{/*  Release Name: {{ .Release.Name }}*/}}
+{{/*  Chart Name: {{ .Chart.Name }}*/}}
+{{/*  Replicas: {{ .Values.app.replicaCount }}*/}}
+{{/*  App Container Port: {{ .Values.app.containerPort }}*/}}
+{{/*  Service Port: {{ .Values.app.service.port }}*/}}
 
-{{- if .Values.database.image.repository }}
-🚀 Database Info:
-  Host: {{ if .Values.database.host }}{{ .Values.database.host }}{{ else }}{{ $fullName }}-db{{ end }}
-  Port: {{ .Values.database.port }}
-  Replicas: {{ .Values.database.replicas }}
-{{- end }}
+{{/*{{- if .Values.database.image.repository }}*/}}
+{{/*🚀 Database Info:*/}}
+{{/*  Host: {{ if .Values.database.host }}{{ .Values.database.host }}{{ else }}{{ $fullName }}-db{{ end }}*/}}
+{{/*  Port: {{ .Values.database.port }}*/}}
+{{/*  Replicas: {{ .Values.database.replicas }}*/}}
+{{/*{{- end }}*/}}
 
-{{- if .Values.ingress.enabled }}
-🌐 Ingress hostname: http://{{ .Values.ingress.host }}
-{{- end }}
+{{/*{{- if .Values.ingress.enabled }}*/}}
+{{/*🌐 Ingress hostname: http://{{ .Values.ingress.host }}*/}}
+{{/*{{- end }}*/}}
 
-{{- if .Values.app.envFromSecrets.enabled }}
-Note: Secrets env-vars are enabled
-⚠️ Ensure these secrets exist in the cluster before deployment ⚠️
+{{/*{{- if .Values.app.envFromSecrets.enabled }}*/}}
+{{/*Note: Secrets env-vars are enabled*/}}
+{{/*⚠️ Ensure these secrets exist in the cluster before deployment ⚠️*/}}
 
-{{- range .Values.app.envFromSecrets.secretRefNames }}
-  - {{ . }}
-{{- end }}
-Ensure these secrets exist in the cluster before deployment.
-{{- end }}
+{{/*{{- range .Values.app.envFromSecrets.secretRefNames }}*/}}
+{{/*  - {{ . }}*/}}
+{{/*{{- end }}*/}}
+{{/*Ensure these secrets exist in the cluster before deployment.*/}}
+{{/*{{- end }}*/}}
 
-{{- $claimName := .Values.existingClaim | default (include "app.persistenceName" .) }}
-{{- if $claimName }}
-📦 Persistent storage PVC: {{ $claimName }}
-{{- else }}
-🔦 No PVC specified in this deployment.
-{{- end }}
+{{/*{{- $claimName := .Values.existingClaim | default (include "app.persistenceName" .) }}*/}}
+{{/*{{- if $claimName }}*/}}
+{{/*📦 Persistent storage PVC: {{ $claimName }}*/}}
+{{/*{{- else }}*/}}
+{{/*🔦 No PVC specified in this deployment.*/}}
+{{/*{{- end }}*/}}
