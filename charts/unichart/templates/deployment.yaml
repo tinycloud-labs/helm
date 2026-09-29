@@ -56,7 +56,7 @@ spec:
 
           # -- Volume mounts --
           {{- $vm := .Values.app.volumeMounts | default list }}
-          {{- if and .Values.persistence.enabled (gt (len $vm) 0) }}
+          {{- if and .Values.persistence.app.enabled (gt (len $vm) 0) }}
           volumeMounts:
             {{- range $vm }}
             - name: app-storage
@@ -91,17 +91,17 @@ spec:
           {{- end }}
 
       # -- PVC spec --
-      {{- if .Values.persistence.enabled }}
-      {{- if .Values.persistence.existingClaim }}
+      {{- if .Values.persistence.app.enabled }}
+      {{- if .Values.persistence.app.existingClaim }}
       volumes:
         - name: app-storage
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim }}
+            claimName: {{ .Values.persistence.app.existingClaim }}
       {{- else }}
       volumes:
         - name: app-storage
           persistentVolumeClaim:
-            claimName: {{ include "app.persistenceName" . }}
+            claimName: {{ include "app.appPersistenceName" . }}
       {{- end }}
       {{- end }}
 

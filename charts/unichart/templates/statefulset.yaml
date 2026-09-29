@@ -1,4 +1,3 @@
-# Defines a StatefulSet for the database.
 {{- if .Values.database.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
@@ -13,12 +12,9 @@ spec:
   template:
     metadata:
       labels: {{ include "app.selectorLabels" (dict "role" "database" "context" .) | nindent 8 }}-statefulset
-      annotations:
     spec:
-      ## -- Stateful pods spec --
       containers:
         - name: {{ include "app.database" . }}
-          # Decide image name (tag vs digest)
           {{- $image := "" }}
           {{- if .Values.database.image.digest }}
             {{- $image = printf "%s@%s" .Values.database.image.repository .Values.database.image.digest }}
@@ -40,35 +36,33 @@ spec:
               mountPath: {{ .mountPath }}
               subPath: {{ .subPath }}
             {{- end }}
-          # use this if DB container needs to run chown/chmod
           {{- if .Values.database.securityContext.enabled }}
           securityContext:
             runAsUser: {{ .Values.database.securityContext.runAsUser }}
             runAsGroup: {{ .Values.database.securityContext.runAsGroup }}
             runAsNonRoot: {{ .Values.database.securityContext.runAsNonRoot }}
           {{- end }}
-      # -- For DB containers file ownership (chmod/chown) handeling --
       {{- if .Values.database.securityContext.enabled }}
       securityContext:
         fsGroup: {{ .Values.database.securityContext.fsGroup }}
         fsGroupChangePolicy: {{ .Values.database.securityContext.fsGroupChangePolicy }}
       {{- end }}
-      # -- PVC spec --
-      {{- if .Values.persistence.existingClaim }}
-      volumes:
-        - name: db-storage
-          persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim }}
-      {{- else }}
-      volumes:
-        - name: db-storage
-          persistentVolumeClaim:
-            claimName: {{ include "app.persistenceName" . }}
-      {{- end }}
-
-      ## -- Affinity spec --
       {{- with .Values.database.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
+  # -- Per-replica PVC, created and owned by the StatefulSet itself --
+  volumeClaimTemplates:
+    - metadata:
+        name: db-storage
+      spec:
+        accessModes:
+          - {{ .Values.persistence.database.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.database.size }}
+        {{- if .Values.persistence.database.storageClassName }}
+        storageClassName: {{ .Values.persistence.database.storageClassName }}
+        {{- end }}
 {{- end }}

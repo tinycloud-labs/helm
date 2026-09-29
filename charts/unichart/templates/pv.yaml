@@ -1,26 +1,21 @@
-# This template will not be rendered if a storageClassName is provided in values.yaml
-# Which means:
-# 1. There is a storage class defined in the cluster
-# 2. The PV will be created dynamically by the storage class (NFS client provisioner)
-{{- if .Values.persistence.enabled }}
-{{- if not .Values.existingClaim }}
-{{- if not .Values.persistence.storageClassName }}
+{{- if .Values.persistence.app.enabled }}
+{{- if not .Values.persistence.app.existingClaim }}
+{{- if not .Values.persistence.app.storageClassName }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ include "app.persistenceName" . }}
+  name: {{ include "app.appPersistenceName" . }}
   labels: {{ include "app.labels" . | nindent 4 }}
 spec:
   accessModes:
-    - {{ .Values.persistence.accessMode }}
+    - {{ .Values.persistence.app.accessMode }}
   capacity:
-    storage: {{ .Values.persistence.size }}
-  persistentVolumeReclaimPolicy: {{ .Values.persistence.reclaimPolicy }}
-  # Set to empty string to avoid dynamic NFS provisioning
+    storage: {{ .Values.persistence.app.size }}
+  persistentVolumeReclaimPolicy: {{ .Values.persistence.app.reclaimPolicy }}
   storageClassName: ""
   nfs:
-    server: {{ .Values.persistence.nfs.server }}
-    path: {{ .Values.persistence.nfs.path }}
+    server: {{ .Values.persistence.app.nfs.server }}
+    path: {{ .Values.persistence.app.nfs.path }}
 {{- end }}
 {{- end }}
 {{- end }}

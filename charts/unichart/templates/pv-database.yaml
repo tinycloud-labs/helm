@@ -1,0 +1,36 @@
+{{- if and .Values.database.enabled .Values.persistence.database.existingVolume.handle }}
+{{- $ev := .Values.persistence.database.existingVolume }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "app.name" . }}-db
+  labels: {{ include "app.labels" . | nindent 4 }}
+spec:
+  capacity:
+    storage: {{ .Values.persistence.database.size }}
+  accessModes:
+    - {{ .Values.persistence.database.accessMode }}
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: {{ .Values.persistence.database.storageClassName }}
+  claimRef:
+    namespace: {{ .Values.namespace | default .Release.Namespace }}
+    name: db-storage-{{ include "app.name" . }}-0
+  csi:
+    driver: csi.proxmox.sinextra.dev
+    fsType: {{ $ev.fsType | default "xfs" }}
+    volumeHandle: {{ $ev.handle | quote }}
+    {{- with $ev.volumeAttributes }}
+    volumeAttributes:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: topology.kubernetes.io/region
+              operator: In
+              values: [{{ $ev.region | quote }}]
+            - key: topology.kubernetes.io/zone
+              operator: In
+              values: [{{ $ev.zone | quote }}]
+{{- end }}
