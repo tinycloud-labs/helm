@@ -1,10 +1,34 @@
+#
+# This is an attempt to create a PV for StatefulSets (DBs) that works with the Proxmox CSI plugin
+# to rebind the same existing Proxmox disks on the same PVC if I ever decided to nuke and rebuild the cluster.
+#
+# Behavior on a REBUILT (fresh) cluster:
+#  The StatefulSet's volumeClaimTemplates (NOT THIS PV) will create a PVC named
+#  db-storage-<app.name>-0. This PV's claimRef reserves that exact PVC
+#  name/namespace ahead of time, so when the PVC is created it binds to
+#  this PV (the existing disk) instead of triggering dynamic provisioning.
+#
+# Behavior on a LIVE, already-running cluster:
+#  The PVC already exists and is already Bound to whatever PV it originally
+#  bound to. Rendering this template does NOT move, rebind, or affect that
+#  PVC in any way. This PV simply appears as an extra unbound
+#  object (Available/Pending) until the next full rebuild. This is expected:
+#  committing the volumeHandle to Flux right after it's captured is safe, it just
+#  won't do anything until I actually rebuild.
+# ---
 {{- if and .Values.database.enabled .Values.persistence.database.existingVolume.handle }}
 {{- $ev := .Values.persistence.database.existingVolume }}
+{{- $parts := splitList "/" $ev.handle }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: {{ include "app.name" . }}-db
   labels: {{ include "app.labels" . | nindent 4 }}
+  annotations:
+    # Keep this PV object even if the release is uninstalled. The underlying
+    # disk already survives uninstall via reclaimPolicy: Retain regardless,
+    # this just avoids losing the in-cluster object unnecessarily.
+    helm.sh/resource-policy: keep
 spec:
   capacity:
     storage: {{ .Values.persistence.database.size }}
@@ -29,8 +53,8 @@ spec:
         - matchExpressions:
             - key: topology.kubernetes.io/region
               operator: In
-              values: [{{ $ev.region | quote }}]
+              values: [{{ index $parts 0 | quote }}]
             - key: topology.kubernetes.io/zone
               operator: In
-              values: [{{ $ev.zone | quote }}]
+              values: [{{ index $parts 1 | quote }}]
 {{- end }}
