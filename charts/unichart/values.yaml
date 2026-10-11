@@ -194,7 +194,7 @@ ingress:
   host: ""
 
   #  -- IngressClass to use (e.g., "nginx", "traefik", etc.)
-  ingressClassName: "nginx"
+  ingressClassName: ""
 
   #  -- The port to expose via ingress (typically 80 or 443).
   port: 80
