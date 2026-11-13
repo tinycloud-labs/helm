@@ -53,6 +53,21 @@ entries:
   - annotations:
       category: storage
     apiVersion: v2
+    created: "2026-11-13T01:37:22.840809806Z"
+    description: Provisions Kubernetes storage on NFS or CSI backends, with static
+      and dynamic binding.
+    digest: 53a54e48343abaffa4efa9f521002e1f6db58ad9c63a653eac9e45ecc50a8345
+    maintainers:
+    - name: TinyCloud Labs
+      url: https://github.com/tinycloud-labs
+    name: storage
+    type: application
+    urls:
+    - https://github.com/tinycloud-labs/helm/releases/download/storage-0.1.1/storage-0.1.1.tgz
+    version: 0.1.1
+  - annotations:
+      category: storage
+    apiVersion: v2
     created: "2026-11-13T00:18:24.551623256Z"
     description: Provisions Kubernetes storage on NFS or CSI backends, with static
       and dynamic binding.
@@ -66,6 +81,18 @@ entries:
     - https://github.com/tinycloud-labs/helm/releases/download/storage-0.1.0/storage-0.1.0.tgz
     version: 0.1.0
   unichart:
+  - apiVersion: v2
+    created: "2026-11-13T01:37:23.037441528Z"
+    description: A generic Helm chart, supports stateful and statless applications
+      (single deployment each).
+    digest: 1fcc0678d6cd44ba3bf1d4c9669ef6b95e55a5a7efa6c1cd5234964af61b7ea3
+    maintainers:
+    - name: TinyCloud Labs
+      url: https://github.com/tinycloud-labs
+    name: unichart
+    urls:
+    - https://github.com/tinycloud-labs/helm/releases/download/unichart-1.0.1/unichart-1.0.1.tgz
+    version: 1.0.1
   - apiVersion: v2
     created: "2026-09-29T01:21:17.337020587Z"
     description: A generic Helm chart, supports stateful and statless applications
@@ -250,4 +277,4 @@ entries:
     urls:
     - https://github.com/homecloud-labs/helm/releases/download/unichart-0.0.1/unichart-0.0.1.tgz
     version: 0.0.1
-generated: "2026-11-13T00:18:24.789137715Z"
+generated: "2026-11-13T01:37:23.037617929Z"
