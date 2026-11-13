@@ -49,6 +49,22 @@ entries:
     urls:
     - https://github.com/tinycloud-labs/helm/releases/download/runner-deployment-0.0.1/runner-deployment-0.0.1.tgz
     version: 0.0.1
+  storage:
+  - annotations:
+      category: storage
+    apiVersion: v2
+    created: "2026-11-13T00:18:24.551623256Z"
+    description: Provisions Kubernetes storage on NFS or CSI backends, with static
+      and dynamic binding.
+    digest: e91041d759d15708ce6d34a0c35a7d7cea0719fb57cc96e2fa7916b1a8171cd8
+    maintainers:
+    - name: TinyCloud Labs
+      url: https://github.com/tinycloud-labs
+    name: storage
+    type: application
+    urls:
+    - https://github.com/tinycloud-labs/helm/releases/download/storage-0.1.0/storage-0.1.0.tgz
+    version: 0.1.0
   unichart:
   - apiVersion: v2
     created: "2026-09-29T01:21:17.337020587Z"
@@ -234,4 +250,4 @@ entries:
     urls:
     - https://github.com/homecloud-labs/helm/releases/download/unichart-0.0.1/unichart-0.0.1.tgz
     version: 0.0.1
-generated: "2026-09-29T01:21:17.337168016Z"
+generated: "2026-11-13T00:18:24.789137715Z"
