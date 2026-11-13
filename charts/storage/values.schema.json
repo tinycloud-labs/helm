@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["persistence"],
+  "properties": {
+    "namespace": { "type": "string" },
+    "labels": { "$ref": "#/definitions/stringMap" },
+    "annotations": { "$ref": "#/definitions/stringMap" },
+    "persistence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["size", "accessMode"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 253,
+          "pattern": "^$|^[a-z0-9]([-.a-z0-9]*[a-z0-9])?$"
+        },
+        "size": {
+          "type": "string",
+          "pattern": "^[0-9]+(\\.[0-9]+)?(Ki|Mi|Gi|Ti|Pi|Ei|k|M|G|T|P|E)?$"
+        },
+        "accessMode": {
+          "type": "string",
+          "enum": ["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany", "ReadWriteOncePod"]
+        },
+        "reclaimPolicy": { "type": "string", "enum": ["Retain", "Delete"] },
+        "storageClassName": { "type": "string" },
+        "nfs": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "server": { "type": "string" },
+            "path": { "type": "string", "pattern": "^$|^/" }
+          }
+        },
+        "existingVolume": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "driver": { "type": "string", "minLength": 1 },
+            "handle": { "type": "string" },
+            "fsType": { "type": "string", "minLength": 1 },
+            "volumeAttributes": { "$ref": "#/definitions/stringMap" },
+            "nodeAffinity": { "type": "object" }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "stringMap": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{{- $mode := include "storage.mode" . -}}
+{{- if ne $mode "dynamic" -}}
+{{- $p := .Values.persistence -}}
+{{- $annotations := .Values.annotations -}}
+{{- if eq $mode "csi-static" -}}
+  {{- /* Keeps the PV object on uninstall; the disk itself survives through Retain. */ -}}
+  {{- $annotations = merge (dict "helm.sh/resource-policy" "keep") .Values.annotations -}}
+{{- end -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "storage.name" . }}
+  labels:
+    {{- include "storage.labels" . | nindent 4 }}
+  {{- with $annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  capacity:
+    storage: {{ $p.size }}
+  accessModes:
+    - {{ $p.accessMode }}
+{{- if eq $mode "nfs-static" }}
+  persistentVolumeReclaimPolicy: {{ $p.reclaimPolicy }}
+  storageClassName: ""
+  nfs:
+    server: {{ $p.nfs.server }}
+    path: {{ $p.nfs.path }}
+{{- else }}
+  {{- $ev := $p.existingVolume }}
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: {{ $p.storageClassName }}
+  {{- /* Reserves the volume for this PVC. A PVC already bound to another PV is unaffected. */}}
+  claimRef:
+    namespace: {{ include "storage.namespace" . }}
+    name: {{ include "storage.name" . }}
+  csi:
+    driver: {{ $ev.driver }}
+    fsType: {{ $ev.fsType }}
+    volumeHandle: {{ $ev.handle | quote }}
+    {{- with $ev.volumeAttributes }}
+    volumeAttributes:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  {{- with include "storage.nodeAffinity" . }}
+  nodeAffinity:
+    {{- . | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,5 @@
+persistence:
+  storageClassName: fast
+  nfs:
+    server: nfs.example.test
+    path: /exports/test

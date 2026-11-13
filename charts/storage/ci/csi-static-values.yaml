@@ -1,0 +1,10 @@
+namespace: test-apps
+persistence:
+  name: test-csi
+  size: 5Gi
+  storageClassName: fast-retain
+  existingVolume:
+    handle: "region-a/zone-1/tank/vm-9999-pvc-test"
+    volumeAttributes:
+      ssd: "1"
+      storage: tank

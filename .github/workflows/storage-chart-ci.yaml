@@ -1,0 +1,59 @@
+name: Storage Chart CI
+
+on:
+  pull_request:
+    paths:
+      - 'charts/storage/**'
+      - '.github/workflows/storage-chart-ci.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CHART: charts/storage
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v5
+        with:
+          version: v4.3.1
+
+      - name: Valid values render the expected resources
+        run: |
+          set -euo pipefail
+          check() {
+            local values="$CHART/ci/$1-values.yaml"
+            helm lint --strict "$CHART" --values "$values"
+            local kinds
+            kinds=$(helm template test "$CHART" --values "$values" | awk '/^kind:/ {print $2}' | sort | xargs)
+            [ "$kinds" = "$2" ] || { echo "$1: expected '$2', got '$kinds'"; exit 1; }
+          }
+          check nfs-static "PersistentVolume PersistentVolumeClaim"
+          check dynamic "PersistentVolumeClaim"
+          check csi-static "PersistentVolume PersistentVolumeClaim"
+          check csi-static-generic-driver "PersistentVolume PersistentVolumeClaim"
+
+      - name: Static CSI binds through claimRef only
+        run: |
+          set -euo pipefail
+          output=$(helm template test "$CHART" --values "$CHART/ci/csi-static-values.yaml")
+          grep -q 'claimRef:' <<< "$output"
+          # volumeName on the PVC would fail upgrades of an already bound claim
+          ! grep -q 'volumeName:' <<< "$output"
+
+      - name: Invalid values are rejected
+        run: |
+          set -uo pipefail
+          for values in "$CHART"/ci/invalid/*.yaml; do
+            if helm template test "$CHART" --values "$values" > /dev/null 2>&1; then
+              echo "$values: expected a render failure"
+              exit 1
+            fi
+          done

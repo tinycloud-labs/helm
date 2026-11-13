@@ -11,3 +11,7 @@ nfspersistence:
 paperless-ngx:
   - changed-files:
       - any-glob-to-any-file: "charts/paperless-ngx/**/*"
+
+storage:
+  - changed-files:
+      - any-glob-to-any-file: "charts/storage/**/*"

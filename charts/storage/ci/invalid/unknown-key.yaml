@@ -1,0 +1,3 @@
+persistence:
+  storageClassName: fast
+  sizee: 1Gi

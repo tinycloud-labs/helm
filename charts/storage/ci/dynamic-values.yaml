@@ -1,0 +1,8 @@
+labels:
+  app: test
+annotations:
+  example.test/owner: ci
+persistence:
+  name: test-dynamic
+  size: 5Gi
+  storageClassName: fast-retain

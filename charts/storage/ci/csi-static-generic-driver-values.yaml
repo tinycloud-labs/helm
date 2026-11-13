@@ -1,0 +1,9 @@
+persistence:
+  name: test-generic
+  size: 1Gi
+  accessMode: ReadWriteMany
+  storageClassName: shared
+  existingVolume:
+    driver: nfs.csi.k8s.io
+    handle: nfs.example.test#exports#test
+    fsType: nfs4

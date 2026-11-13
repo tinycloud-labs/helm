@@ -1,0 +1,6 @@
+persistence:
+  nfs:
+    server: nfs.example.test
+    path: /exports/test
+  existingVolume:
+    handle: a/b/c/d

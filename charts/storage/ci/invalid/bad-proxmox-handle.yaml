@@ -1,0 +1,4 @@
+persistence:
+  storageClassName: fast
+  existingVolume:
+    handle: not-a-proxmox-handle

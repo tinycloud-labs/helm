@@ -1,0 +1,7 @@
+persistence:
+  name: test-nfs
+  size: 100Mi
+  accessMode: ReadWriteMany
+  nfs:
+    server: nfs.example.test
+    path: /exports/test
