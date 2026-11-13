@@ -1,6 +1,6 @@
 apiVersion: v2
 name: storage
-version: 0.1.0
+version: 0.1.1
 description: Provisions Kubernetes storage on NFS or CSI backends, with static and dynamic binding.
 type: application
 

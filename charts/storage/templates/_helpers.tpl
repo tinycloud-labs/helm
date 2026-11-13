@@ -40,6 +40,19 @@ Validates persistence and returns the storage mode:
 {{- end -}}
 {{- end -}}
 
+{{/*
+Capacity of an existing CSI volume's PV. Once the PV is bound, the CSI resizer owns
+its capacity: raising it here before the PVC would make the resizer skip growing the disk.
+*/}}
+{{- define "storage.csiCapacity" -}}
+{{- $pv := lookup "v1" "PersistentVolume" "" (include "storage.name" .) -}}
+{{- if and $pv (eq ($pv.status.phase | default "") "Bound") -}}
+{{- index $pv.spec.capacity "storage" -}}
+{{- else -}}
+{{- .Values.persistence.size -}}
+{{- end -}}
+{{- end -}}
+
 {{/* nodeAffinity of an existing CSI volume, explicit or derived from a Proxmox handle. */}}
 {{- define "storage.nodeAffinity" -}}
 {{- $ev := .Values.persistence.existingVolume -}}

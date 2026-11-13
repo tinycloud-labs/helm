@@ -58,6 +58,19 @@ app.kubernetes.io/role: {{ .role }}
 {{- end }}
 
 {{/*
+Capacity of the database PV. Once the PV is bound, the CSI resizer owns its capacity:
+raising it here before the PVC would make the resizer skip growing the disk.
+*/}}
+{{- define "app.dbVolumeCapacity" -}}
+{{- $pv := lookup "v1" "PersistentVolume" "" (printf "%s-db" (include "app.name" .)) -}}
+{{- if and $pv (eq ($pv.status.phase | default "") "Bound") -}}
+{{- index $pv.spec.capacity "storage" -}}
+{{- else -}}
+{{- .Values.persistence.database.size -}}
+{{- end -}}
+{{- end }}
+
+{{/*
 Define the name used for the app's own PV/PVC (Deployment side only).
 The StatefulSet no longer needs a name here: its DB volume is created
 per-replica via volumeClaimTemplates and named automatically by Kubernetes
