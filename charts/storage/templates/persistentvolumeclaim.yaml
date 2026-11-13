@@ -1,0 +1,25 @@
+{{- $mode := include "storage.mode" . -}}
+{{- $p := .Values.persistence -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "storage.name" . }}
+  namespace: {{ include "storage.namespace" . }}
+  labels:
+    {{- include "storage.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ $p.accessMode }}
+  resources:
+    requests:
+      storage: {{ $p.size }}
+{{- if eq $mode "nfs-static" }}
+  storageClassName: ""
+  volumeName: {{ include "storage.name" . }}
+{{- else }}
+  storageClassName: {{ $p.storageClassName }}
+{{- end }}

@@ -1,0 +1,12 @@
+apiVersion: v2
+name: storage
+version: 0.1.0
+description: Provisions Kubernetes storage on NFS or CSI backends, with static and dynamic binding.
+type: application
+
+maintainers:
+  - name: TinyCloud Labs
+    url: https://github.com/tinycloud-labs
+
+annotations:
+  category: "storage"

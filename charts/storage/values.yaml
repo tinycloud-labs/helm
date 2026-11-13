@@ -1,0 +1,32 @@
+# -- Namespace for the PVC. Defaults to the release namespace.
+namespace: ""
+
+# -- Extra labels and annotations for every rendered resource.
+labels: {}
+annotations: {}
+
+persistence:
+  # -- Name of the PVC, and of the PV when the chart creates one. Defaults to the release name.
+  name: ""
+  size: 1Gi
+  accessMode: ReadWriteOnce
+  # -- Reclaim policy of the static NFS PV. CSI PVs from existingVolume are always Retain.
+  reclaimPolicy: Retain
+
+  # -- StorageClass for dynamic provisioning. Also required with existingVolume.
+  storageClassName: ""
+
+  # -- Static NFS share. Mutually exclusive with storageClassName and existingVolume.
+  nfs:
+    server: ""
+    path: ""
+
+  # -- Binds an existing CSI volume instead of provisioning a new one.
+  existingVolume:
+    driver: csi.proxmox.sinextra.dev
+    # -- Enables this mode. For Proxmox: <region>/<zone>/<storage>/<disk>
+    handle: ""
+    fsType: xfs
+    volumeAttributes: {}
+    # -- PV nodeAffinity. If empty, Proxmox volumes derive it from the handle.
+    nodeAffinity: {}
