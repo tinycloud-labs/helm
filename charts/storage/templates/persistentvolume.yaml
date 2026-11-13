@@ -18,7 +18,7 @@ metadata:
   {{- end }}
 spec:
   capacity:
-    storage: {{ $p.size }}
+    storage: {{ if eq $mode "csi-static" }}{{ include "storage.csiCapacity" . }}{{ else }}{{ $p.size }}{{ end }}
   accessModes:
     - {{ $p.accessMode }}
 {{- if eq $mode "nfs-static" }}

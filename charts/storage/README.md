@@ -42,6 +42,10 @@ spec:
     disableWait: true
 ```
 
+## Resizing
+
+Raise `persistence.size` if the StorageClass sets `allowVolumeExpansion: true`. Volumes can grow but not shrink, and the filesystem is resized while a pod uses the volume.
+
 ## Static CSI (rebinding a disk)
 
 Keeps a disk attached to the same PVC across cluster rebuilds. After the first dynamic install, capture the volume:
@@ -71,4 +75,5 @@ persistence:
 - `name`, `storageClassName` and `size` must match the existing PVC.
 - On a running cluster the PVC stays on its current PV, and the new PV sits unused until the next rebuild.
 - The PV is always `Retain` and is kept on uninstall. To reuse it on the same cluster after an uninstall, clear `spec.claimRef.uid`.
+- Once the PV is bound, its capacity is read from the cluster rather than `size`, so resizing works as for dynamic volumes.
 - Proxmox `nodeAffinity` comes from the handle. For other drivers, set `existingVolume.driver` and, if needed, `existingVolume.nodeAffinity`.

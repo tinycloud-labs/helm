@@ -66,6 +66,14 @@ Then update values with the handle and redeploy. The chart creates a static PV w
 #### On a rebuilt cluster
 No manual steps needed beyond having the handle already committed. Deploy normally, the static PV pre-binds on first creation.
 
+#### Resizing the database disk
+`volumeClaimTemplates` can't be changed on a live StatefulSet, so grow the PVC first:
+```bash
+kubectl -n <namespace> patch pvc db-storage-<name>-0 -p '{"spec":{"resources":{"requests":{"storage":"<new-size>"}}}}'
+kubectl -n <namespace> delete statefulset <name> --cascade=orphan   # pod keeps running
+```
+Then raise `persistence.database.size` and redeploy; the chart recreates the StatefulSet. Once the rebind PV is bound, its capacity is read from the cluster, so the resizer still grows the disk.
+
 #### Rules (and learned lessons!)
 - `size`, `accessMode`, and `storageClassName` must be identical in both modes. `volumeClaimTemplates` is immutable after creation, changing these on a live StatefulSet will fail.
 - Only `existingVolume.handle` and `existingVolume.volumeAttributes` change between fresh install and rebind.

@@ -31,7 +31,7 @@ metadata:
     helm.sh/resource-policy: keep
 spec:
   capacity:
-    storage: {{ .Values.persistence.database.size }}
+    storage: {{ include "app.dbVolumeCapacity" . }}
   accessModes:
     - {{ .Values.persistence.database.accessMode }}
   persistentVolumeReclaimPolicy: Retain
