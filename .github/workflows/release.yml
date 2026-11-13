@@ -4,9 +4,16 @@ on:
   push:
     branches:
       - main
+  # Re-renders the chart index page without a chart change
+  workflow_dispatch:
 
 permissions:
   contents: write
+
+# Both steps push to gh-pages
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
   release:
@@ -33,3 +40,42 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           CR_SKIP_EXISTING: "true"
           CR_CHARTS_DIR: charts
+
+      # Runs here because pushes made with GITHUB_TOKEN (like chart-releaser's) never trigger other workflows
+      - name: Checkout gh-pages
+        uses: actions/checkout@v7
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      # A chart deleted from charts/ is dropped from the Helm repo index as well
+      - name: Prune removed charts from index.yaml
+        run: |
+          for chart in $(yq '.entries | keys | .[]' gh-pages/index.yaml); do
+            if [ ! -d "charts/$chart" ]; then
+              echo "Removing $chart from index.yaml"
+              yq -i "del(.entries[\"$chart\"])" gh-pages/index.yaml
+            fi
+          done
+
+      - name: Render chart index page
+        run: |
+          yq -o=json gh-pages/index.yaml \
+            | python3 .github/scripts/render_index.py .github/pages/index.html \
+            > gh-pages/index.html
+
+      - name: Publish index.yaml and chart index page
+        working-directory: gh-pages
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          # Serve files as-is: the page is plain HTML, so Jekyll is not needed
+          touch .nojekyll
+          git rm -q --ignore-unmatch index.md .github/chart-index-template.md
+          git add index.yaml index.html .nojekyll
+          if git diff --cached --quiet; then
+            echo "Chart index page is up to date"
+            exit 0
+          fi
+          git commit -m "Update chart index page"
+          git push
