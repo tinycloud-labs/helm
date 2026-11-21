@@ -21,9 +21,8 @@ spec:
           ports:
             - containerPort: 8000
           env:
-            {{- range .Values.paperlessngx.env }}
-            - name: {{ .name | quote }}
-              value: {{ .value | quote }}
+            {{- with .Values.paperlessngx.env }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
 
             - name: PAPERLESS_REDIS
