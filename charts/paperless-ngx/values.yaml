@@ -13,10 +13,17 @@
 paperlessngx:
   image:
     repository: ghcr.io/paperless-ngx/paperless-ngx
-    tag: 3.3.0
+    tag: 3.4.0
     pullPolicy: IfNotPresent
 
   # Paperless-Ngx env-vars. For available configuration options see: https://docs.paperless-ngx.com/configuration/
+  # Entries are standard container env vars, so `valueFrom` works too. Since v3,
+  # PAPERLESS_SECRET_KEY is required (the app won't start without it):
+  #   - name: PAPERLESS_SECRET_KEY
+  #     valueFrom:
+  #       secretKeyRef:
+  #         name: paperless-secret-key
+  #         key: secret-key
   # Below are some commonly used options.
   env:
     # Identify the URL at which Paperless is available. Include https:// or http://.

@@ -2,5 +2,9 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
-  ]
+  ],
+  "helm-values": {
+    "description": "Image tags in charts/*/values.yaml are fallback defaults only. Deployments pin and update their images in their own HelmRelease (flux repo), so bumping them here only creates duplicate PRs; they would not ship anyway until the chart version is bumped",
+    "enabled": false
+  }
 }
